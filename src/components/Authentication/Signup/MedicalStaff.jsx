@@ -229,7 +229,7 @@ const MedicalStaff = ({ moveTo }) => {
           <button
             onClick={() => moveTo(8)}
             disabled={isChecked}
-           aria-label="disable"
+            aria-label="disable"
             className="py-2 px-4 max-w-md flex justify-center items-center bg-[#07A6A9] text-white w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
           >
             Continue

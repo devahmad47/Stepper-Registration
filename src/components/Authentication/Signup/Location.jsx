@@ -24,12 +24,12 @@ const Location = () => {
 
       <div class="bg-white p-4 rounded-lg mt-2">
         <div class="relative bg-inherit"></div>
-        <button
-          onClick={alert("You Have Successfully Submit your Credientials")}
+        <Link
+          to={'/Login'}
           className="py-2 px-4 max-w-md flex justify-center items-center bg-[#07A6A9] text-white w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
         >
           Continue
-        </button>
+        </Link>
       </div>
     </>
   );
