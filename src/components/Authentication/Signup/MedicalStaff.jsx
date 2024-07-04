@@ -7,6 +7,17 @@ const MedicalStaff = ({ moveTo }) => {
     file: null,
     name: "",
     category: "",
+    bio: "",
+  });
+  const [modalFormData, setModalFormData] = useState({
+    name: "",
+    category: "",
+    bio: "",
+  });
+  const [errors, setErrors] = useState({
+    name: "",
+    category: "",
+    bio: "",
   });
 
   const toggleModal = () => {
@@ -25,6 +36,14 @@ const MedicalStaff = ({ moveTo }) => {
     });
   };
 
+  const handleModalInputChange = (e) => {
+    const { name, value } = e.target;
+    setModalFormData({
+      ...modalFormData,
+      [name]: value,
+    });
+  };
+
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
@@ -35,13 +54,38 @@ const MedicalStaff = ({ moveTo }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isChecked) {
-      if (!formData.file || !formData.name || !formData.category) {
-        alert("Please fill out all fields.");
+      if (!formData.file || !formData.name || !formData.category || !formData.bio) {
+        setErrors({
+          name: !formData.name ? "Please enter a name." : "",
+          category: !formData.category ? "Please select a category." : "",
+          bio: !formData.bio ? "Please enter a bio." : "",
+        });
+       
         return;
       }
+    }else{
+      moveTo(8, formData);
     }
     // Submit form logic
     console.log("Form submitted:", formData);
+    // You can call a function to save data or move to the next step here
+    moveTo(8, formData);
+  };
+
+  const handleModalSubmit = (e) => {
+    e.preventDefault();
+    if (!modalFormData.name || !modalFormData.category || !modalFormData.bio) {
+      setErrors({
+        name: !modalFormData.name ? "Please enter a name." : "",
+        category: !modalFormData.category ? "Please select a category." : "",
+        bio: !modalFormData.bio ? "Please enter a bio." : "",
+      });
+      return;
+    }
+    // Submit modal form logic
+    console.log("Modal form submitted:", modalFormData);
+    // You can call a function to save data here
+    setIsModalOpen(false);
   };
 
   return (
@@ -87,35 +131,29 @@ const MedicalStaff = ({ moveTo }) => {
                   type="text"
                   id="medical"
                   name="name"
-                  className="peer bg-transparent h-8 w-72 rounded-sm text-gray-200 placeholder-transparent ring-1 px-2 ring-gray-300 focus:ring-sky-600 focus:outline-none focus:border-rose-600"
+                  className={`peer bg-transparent h-8 w-72 rounded-sm text-gray-700 placeholder-transparent ring-1 px-2 ring-gray-300 focus:ring-sky-600 focus:outline-none focus:border-rose-600 ${errors.name ? "border-red-500" : ""}`}
                   placeholder="Medical Practitioner Name"
                   value={formData.name}
                   onChange={handleInputChange}
                   disabled={!isChecked}
                 />
-                <label
-                  htmlFor="medical"
-                  className="absolute cursor-text left-0 text-xs text-gray-500 bg-inherit mx-1 px-1 peer-placeholder-shown:text-xs peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3 peer-focus:text-sky-600 peer-focus:text-xs transition-all"
-                >
-                  Medical Practitioner Name
-                </label>
+                {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
               </div>
             </div>
             <div className="bg-white p-4 rounded-lg -mb-6">
               <div className="relative bg-inherit">
                 <select
-                  className="w-72 h-8 justify-center items-center text-start rounded-sm border border-[#e0e0e0] bg-white py-1 px-2 text-xs font-light text-[#5e5e5e] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  className={`w-72 h-8 justify-center items-center text-start rounded-sm border border-[#e0e0e0] bg-white py-1 px-2 text-xs font-light text-[#5e5e5e] outline-none focus:border-[#6A64F1] focus:shadow-md ${errors.category ? "border-red-500" : ""}`}
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
                   disabled={!isChecked}
                 >
-                  <option value="" className="text-[#D5CED2]">
-                    Choose Medical Specialty
-                  </option>
+                  <option value="">Choose Medical Specialty</option>
                   <option value="Orthopedics">Orthopedics</option>
                   <option value="Gynecology">Gynecology</option>
                 </select>
+                {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category}</p>}
               </div>
             </div>
             <div className="bg-white p-4 mb-2 rounded-lg ">
@@ -125,21 +163,35 @@ const MedicalStaff = ({ moveTo }) => {
                   id="bio"
                   rows="4"
                   maxLength="256"
-                  required
+                  value={formData.bio}
+                  onChange={handleInputChange}
                   disabled={!isChecked}
                   placeholder="Brief Bio"
-                  className="w-full rounded-sm p-2 bg-black/5 border border-solid border-black/10 font-medium text-xs"
+                  className={`w-full rounded-sm p-2 bg-black/5 border border-solid border-black/10 font-medium text-xs ${errors.bio ? "border-red-500" : ""}`}
                 ></textarea>
+                {errors.bio && <p className="text-xs text-red-500 mt-1">{errors.bio}</p>}
               </div>
             </div>
-          
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="py-2 mb-2 px-4 max-w-md flex justify-center items-center bg-[#07A6A9] text-white w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
+            >
+              Continue
+            </button>
+            <button
+              onClick={toggleModal}
+              className="py-2 px-4 max-w-md flex justify-center items-center text-[#07A6A9] border border-[#07A6A9] w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
+            >
+              Save and Add Another
+            </button>
+            <button
+              onClick={() => moveTo(8)}
+              className="py-2 px-4 max-w-md flex justify-center items-center text-[#07A6A9] w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
+            >
+              Skip
+            </button>
           </form>
-          <button
-            onClick={toggleModal}
-            className="py-2 mb-2 px-4 max-w-md flex justify-center items-center text-[#07A6A9] border border-[#07A6A9] w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
-          >
-            Save and Add Another
-          </button>
           {isModalOpen && (
             <>
               <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-400/50 bg-opacity-5 backdrop-filter backdrop-blur-sm">
@@ -165,57 +217,54 @@ const MedicalStaff = ({ moveTo }) => {
                       </svg>
                     </button>
                   </div>
-                  <form>
+                  <form onSubmit={handleModalSubmit}>
                     <div className="bg-white p-4 rounded-lg">
                       <div className="relative bg-inherit">
                         <input
                           type="text"
-                          id="medical"
+                          id="modal-medical"
                           name="name"
                           required
-                          className="peer bg-transparent h-8 w-full rounded-sm text-gray-800 placeholder-gray-400 ring-1 px-2 ring-gray-300 focus:ring-sky-600 focus:outline-none focus:border-rose-600"
+                          className={`peer bg-transparent h-8 w-full rounded-sm text-gray-800 placeholder-gray-400 ring-1 px-2 ring-gray-300 focus:ring-sky-600 focus:outline-none focus:border-rose-600 ${errors.name ? "border-red-500" : ""}`}
                           placeholder="Medical Practitioner"
-                          value={formData.name}
-                          onChange={handleInputChange}
+                          value={modalFormData.name}
+                          onChange={handleModalInputChange}
                         />
-                        <label
-                          htmlFor="medical"
-                          className="absolute left-2 -top-2 text-xs text-gray-500 bg-white px-1 peer-placeholder-shown:text-xs peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3 peer-focus:text-sky-600 peer-focus:text-xs transition-all"
-                        >
-                          Medical Practitioner Name
-                        </label>
+                        {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
                       </div>
                     </div>
                     <div className="bg-white p-4 rounded-lg">
                       <div className="relative bg-inherit">
                         <select
-                          className="w-full h-8 justify-center items-center text-start rounded-sm border border-[#e0e0e0] bg-white py-1 px-2 text-xs font-light text-[#5e5e5e] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                          className={`w-full h-8 justify-center items-center text-start rounded-sm border border-[#e0e0e0] bg-white py-1 px-2 text-xs font-light text-[#5e5e5e] outline-none focus:border-[#6A64F1] focus:shadow-md ${errors.category ? "border-red-500" : ""}`}
                           name="category"
-                          value={formData.category}
-                          onChange={handleInputChange}
+                          value={modalFormData.category}
+                          onChange={handleModalInputChange}
                         >
-                          <option value="" className="text-[#D5CED2]">
-                            Choose Medical Specialty
-                          </option>
+                          <option value="">Choose Medical Specialty</option>
                           <option value="Orthopedics">Orthopedics</option>
                           <option value="Gynecology">Gynecology</option>
                         </select>
+                        {errors.category && <p className="text-xs text-red-500 mt-1">{errors.category}</p>}
                       </div>
                     </div>
                     <div className="bg-white p-4 rounded-lg">
                       <div className="relative bg-inherit">
                         <textarea
                           name="bio"
-                          id="bio"
+                          id="modal-bio"
                           rows="4"
                           maxLength="256"
                           required
+                          value={modalFormData.bio}
+                          onChange={handleModalInputChange}
                           placeholder="Brief Bio"
-                          className="w-full rounded-sm p-2 bg-gray-100 border border-gray-300 focus:outline-none focus:border-sky-600 focus:ring-1 focus:ring-sky-600"
+                          className={`w-full rounded-sm p-2 bg-gray-100 border border-gray-300 focus:outline-none focus:border-sky-600 focus:ring-1 focus:ring-sky-600 ${errors.bio ? "border-red-500" : ""}`}
                         ></textarea>
+                        {errors.bio && <p className="text-xs text-red-500 mt-1">{errors.bio}</p>}
                       </div>
                       <button
-                        onClick={toggleModal}
+                        type="submit"
                         className="py-2 px-4 max-w-lg w-full mt-2 flex justify-center items-center bg-[#07A6A9] text-white transition ease-in duration-200 text-center text-sm font-light rounded-sm"
                       >
                         Add
@@ -226,20 +275,6 @@ const MedicalStaff = ({ moveTo }) => {
               </div>
             </>
           )}
-          <button
-            onClick={() => moveTo(8)}
-            disabled={isChecked}
-            aria-label="disable"
-            className="py-2 px-4 max-w-md flex justify-center items-center bg-[#07A6A9] text-white w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
-          >
-            Continue
-          </button>
-          <button
-            onClick={() => moveTo(8)}
-            className="py-2 px-4 max-w-md flex justify-center items-center text-[#07A6A9] w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"
-          >
-            Skip
-          </button>
         </div>
       </div>
     </>

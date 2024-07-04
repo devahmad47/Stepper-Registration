@@ -21,17 +21,20 @@ const Language = ({ onNext }) => {
     urdu: false
   });
 
+  const [error, setError] = useState("");
+
   const handleCheckboxChange = (event) => {
     setCheckedItems({
       ...checkedItems,
       [event.target.name]: event.target.checked,
     });
+    setError("");
   };
 
   const validate = () => {
     const isSelected = Object.values(checkedItems).some(item => item === true);
     if (!isSelected) {
-      alert("Please select at least one language.");
+      setError("Please select at least one language.");
     } else {
       onNext(5, checkedItems);
     }
@@ -59,6 +62,7 @@ const Language = ({ onNext }) => {
               </li>
             ))}
           </ul>
+          {error && <p className="text-red-500 text-xs mt-2 text-center">{error}</p>}
           <button
             onClick={validate}
             className="py-2 px-4 mt-5 max-w-md flex justify-center items-center bg-[#07A6A9] text-white w-full transition ease-in duration-200 text-center text-sm font-light rounded-sm"

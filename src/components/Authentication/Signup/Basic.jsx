@@ -18,12 +18,12 @@ const Basic = ({ onNext }) => {
       ...checkedItems,
       [event.target.name]: event.target.checked,
     });
+    setError(false);
   };
 
   const validate = () => {
     const isSelected = Object.values(checkedItems).some(item => item === true);
     if (!isSelected) {
-      alert("Please select at least one service.");
       setError(true);
     } else {
       onNext(4, checkedItems);
@@ -37,6 +37,7 @@ const Basic = ({ onNext }) => {
           <p className="text-gray-700 mb-2 text-center text-xs text-custom-10">
             Which one of these extra services does your business provide your patients?
           </p>
+          {error && <p className="text-red-500 text-xs text-center mb-2">Please select at least one service.</p>}
           <ul className="list-none p-0 m-0 overflow-y-auto max-h-48">
             <li className="flex items-center p-2 border-b text-xs border-gray-300">
               <input
@@ -45,7 +46,7 @@ const Basic = ({ onNext }) => {
                 name="hotel43"
                 checked={checkedItems.hotel43}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="4&3 star Hotel Accommodation"
               />
               4&3 star Hotel Accommodation
             </li>
@@ -56,7 +57,7 @@ const Basic = ({ onNext }) => {
                 name="hotel3"
                 checked={checkedItems.hotel3}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="3 star Hotel Accommodation"
               />
               3 star Hotel Accommodation
             </li>
@@ -67,7 +68,7 @@ const Basic = ({ onNext }) => {
                 name="tours"
                 checked={checkedItems.tours}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="Sightseeing Tours"
               />
               Sightseeing Tours
             </li>
@@ -78,7 +79,7 @@ const Basic = ({ onNext }) => {
                 name="transport"
                 checked={checkedItems.transport}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="Transportation to and from Airport/Clinic/Hotel"
               />
               Transportation to and from Airport/Clinic/Hotel
             </li>
@@ -89,7 +90,7 @@ const Basic = ({ onNext }) => {
                 name="visa"
                 checked={checkedItems.visa}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="Visa Support"
               />
               Visa Support
             </li>
@@ -100,7 +101,7 @@ const Basic = ({ onNext }) => {
                 name="support"
                 checked={checkedItems.support}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="Sightseeing Support Booking"
               />
               Sightseeing Support Booking
             </li>
@@ -111,7 +112,7 @@ const Basic = ({ onNext }) => {
                 name="insurance"
                 checked={checkedItems.insurance}
                 onChange={handleCheckboxChange}
-                aria-label="..."
+                aria-label="Medical Complication Insurance/Travel Insurance"
               />
               Medical Complication Insurance/Travel Insurance
             </li>
